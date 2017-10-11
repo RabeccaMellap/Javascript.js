@@ -1,28 +1,25 @@
-let images = document.querySelectorAll('.thumbnails img');
-let viewer = document.querySelector('.viewer');
 
-let largeImage = document.createElement('img');
-viewer.appendChild(largeImage);
+var endpoint = 'http://backend.ihub.co.ke/api/v2/blogs';
 
-let caption = document.createElement('p')
-viewer.appendChild(caption);
+const xhr = new XMLHttpRequest();
 
+xhr.addEventListener('load',() => {
+	let content = JSON.parse(xhr.responseText);
 
-images.forEach(function(image){
+	const container = document.querySelector('.posts');
 
-	image.onclick = function click(event){
-		let img = event.target;
-		largeImage.src = img.src;
+	content.data.forEach((blogPost) => {
+		const img = document.createElement('img');
+		img.src = blogPost.image_link;
 
-    let captionText = img.getAttribute('data-caption');
-    caption.innerHTML =captionText;
-		
+		container.appendChild(img);
+		const h3 =document.createElement('h3');
+		h3.textContent = blogPost.heading;
+		container.appendChild(h3);
+	});
 
+	
+});
 
-
-		
-		
-
-	}
-
-})
+xhr.open('GET', endpoint);
+xhr.send();
